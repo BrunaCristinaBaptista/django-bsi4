@@ -1,16 +1,16 @@
+from rest_framework import viewsets
+from rest_framework.filters import OrderingFilter, SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
-
-from rest_framework.viewsets import ModelViewSet
-
 from .models import Produto
 from .serializers import ProdutoSerializer
+from .filters import ProdutoFilter
 
-
-class ProdutoViewSet(ModelViewSet):
+class ProdutoViewSet(viewsets.ModelViewSet):
     queryset = Produto.objects.all()
     serializer_class = ProdutoSerializer
-    filter_backends = (DjangoFilterBackend,)
+    filter_backends = (DjangoFilterBackend, OrderingFilter, SearchFilter)
     filterset_class = ProdutoFilter
-    ordering_fields = ("nome", "preco")
-    ordering = ("id",)
-    search_fields = ("nome",)
+
+    # Adicione 'marca' em ambos:
+    ordering_fields = ("nome", "preco", "marca", "estoque", "descricao")
+    search_fields = ("nome", "marca", "descricao")
